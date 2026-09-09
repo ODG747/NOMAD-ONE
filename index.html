@@ -1,0 +1,1223 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NOMAD ONE — L'enceinte qui recharge aussi votre téléphone</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Inter:wght@300;400;500;600&display=swap">
+<style>
+:root{
+  --bg:#12162E; --bg2:#0B0E20; --deep:#065A82; --mint:#02C39A;
+  --ink:#F2F1EC; --ink-60:rgba(242,241,236,.62); --ink-38:rgba(242,241,236,.38);
+  --line:rgba(242,241,236,.12);
+  --serif:"Fraunces",Georgia,"Times New Roman",serif;
+  --sans:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --e:cubic-bezier(.22,.68,.24,1);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{
+  background:var(--bg); color:var(--ink); font-family:var(--sans);
+  overflow:hidden; -webkit-font-smoothing:antialiased;
+}
+body::before{
+  content:""; position:fixed; inset:0; z-index:0; pointer-events:none;
+  background:
+    radial-gradient(120% 90% at 50% 0%, rgba(6,90,130,.30), transparent 60%),
+    radial-gradient(80% 60% at 85% 90%, rgba(2,195,154,.07), transparent 65%),
+    linear-gradient(180deg,#141833 0%, var(--bg) 40%, var(--bg2) 100%);
+}
+#scene{position:fixed;inset:0;z-index:1;display:block}
+#deck{position:fixed;inset:0;z-index:2}
+
+/* ---------- sections ---------- */
+.sec{
+  position:absolute; inset:0; display:flex; opacity:0; visibility:hidden;
+  transition:opacity .32s var(--e), visibility 0s linear .34s;
+  padding:clamp(32px,5vh,64px) clamp(32px,6vw,110px);
+}
+.sec.on{opacity:1;visibility:visible;transition:opacity .42s var(--e), visibility 0s}
+.wrap{width:100%;max-width:1560px;margin:auto;position:relative}
+
+/* reveal */
+.r{opacity:0;transform:translateY(16px);transition:opacity .5s var(--e),transform .5s var(--e)}
+.sec.on .r{opacity:1;transform:none;transition-delay:var(--d,0ms)}
+.r.rx{transform:translateX(-22px)}
+.r.rs{transform:translateY(28px) scale(.97)}
+
+/* ---------- type ---------- */
+.eyebrow{font:500 clamp(10px,.78vw,13px)/1 var(--sans);letter-spacing:.34em;text-transform:uppercase;color:var(--mint)}
+h1{font:600 clamp(52px,9.2vw,150px)/0.92 var(--serif);letter-spacing:-.025em}
+h2{font:400 clamp(30px,3.9vw,62px)/1.04 var(--serif);letter-spacing:-.018em}
+h3{font:500 clamp(17px,1.35vw,23px)/1.2 var(--sans);letter-spacing:-.01em}
+p,li{font:300 clamp(14px,1.02vw,18px)/1.62 var(--sans);color:var(--ink-60)}
+strong{font-weight:500;color:var(--ink)}
+.lead{font:300 clamp(17px,1.65vw,28px)/1.45 var(--sans);color:rgba(242,241,236,.80);letter-spacing:-.01em}
+
+/* ---------- S1 ---------- */
+#s1 .wrap{text-align:center;max-width:1100px}
+#s1 .stack{margin-top:min(45vh,470px)}
+#s1 h1 .ch{display:inline-block;opacity:0;transform:translateY(.42em) rotateX(-55deg);
+  transition:opacity .44s var(--e),transform .52s var(--e)}
+#s1.on h1 .ch{opacity:1;transform:none;transition-delay:calc(var(--i)*52ms + 260ms)}
+#s1 h1 .sp{width:.30em}
+.rule{height:1px;width:0;background:linear-gradient(90deg,transparent,var(--line),transparent);margin:26px auto;
+  transition:width .8s var(--e) .95s}
+#s1.on .rule{width:min(420px,60%)}
+
+/* ---------- S2 ---------- */
+.split{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.92fr);gap:40px;align-items:center;height:100%}
+.grid4{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:26px}
+.blk{background:rgba(255,255,255,.030);border:1px solid var(--line);border-radius:14px;padding:20px 20px 22px;backdrop-filter:blur(7px)}
+.blk .k{font:500 10px/1 var(--sans);letter-spacing:.24em;text-transform:uppercase;color:var(--mint);display:block;margin-bottom:11px}
+.blk p{font-size:clamp(13px,.94vw,16px);line-height:1.55}
+
+/* ---------- S3 ---------- */
+.cards3{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(16px,2vw,30px);margin-top:clamp(28px,5vh,60px)}
+.card{background:rgba(255,255,255,.032);border:1px solid var(--line);border-radius:18px;
+  padding:clamp(24px,2.2vw,38px);backdrop-filter:blur(8px);min-height:min(46vh,340px);
+  display:flex;flex-direction:column}
+.card .ico{height:clamp(64px,7vw,96px);margin-bottom:auto}
+.card h3{margin:22px 0 10px}
+.card .n{font:500 11px/1 var(--sans);letter-spacing:.2em;color:var(--ink-38)}
+
+/* ---------- S4 labels ---------- */
+#s4 .wrap{height:100%}
+#lab{position:absolute;inset:0;pointer-events:none}
+#labSvg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+#labSvg path{fill:none;stroke:rgba(2,195,154,.5);stroke-width:1;
+  stroke-dasharray:var(--L);stroke-dashoffset:var(--L);transition:stroke-dashoffset .5s var(--e)}
+#s4.on #labSvg path{stroke-dashoffset:0;transition-delay:calc(var(--i)*90ms + 480ms)}
+.lb{position:absolute;width:190px;opacity:0;transform:translateY(10px);
+  transition:opacity .4s var(--e),transform .4s var(--e)}
+#s4.on .lb{opacity:1;transform:none;transition-delay:calc(var(--i)*90ms + 560ms)}
+.lb.right{text-align:right}
+.lb .v{font:400 clamp(20px,2vw,32px)/1 var(--serif);color:var(--ink);letter-spacing:-.01em}
+.lb .t{font:500 10px/1 var(--sans);letter-spacing:.2em;text-transform:uppercase;color:var(--mint);margin-top:8px;display:block}
+.lb .j{font:300 12px/1.45 var(--sans);color:var(--ink-38);margin-top:7px;display:block}
+.lb .dot{position:absolute;width:5px;height:5px;border-radius:50%;background:var(--mint);top:11px}
+.lb.left .dot{right:-15px} .lb.right .dot{left:-15px}
+
+/* ---------- S5 ---------- */
+#s5 .side{position:absolute;left:0;top:50%;transform:translateY(-50%);max-width:min(29vw,405px)}
+#s5 .big{font:400 clamp(26px,3.2vw,50px)/1.1 var(--serif);letter-spacing:-.02em;margin-top:20px}
+#s5 .big em{font-style:normal;color:var(--mint)}
+.pills{display:flex;gap:9px;margin-top:26px;flex-wrap:wrap}
+.pill{font:500 10px/1 var(--sans);letter-spacing:.18em;text-transform:uppercase;
+  border:1px solid rgba(2,195,154,.3);color:var(--mint);border-radius:100px;padding:8px 14px}
+
+/* ---------- S6 ---------- */
+#s6 .price{font:600 clamp(120px,20vw,330px)/0.82 var(--serif);letter-spacing:-.045em;
+  background:linear-gradient(170deg,#F2F1EC 30%,rgba(2,195,154,.85));-webkit-background-clip:text;background-clip:text;color:transparent}
+#s6 .price .eur{font-size:.36em;letter-spacing:-.02em;vertical-align:.42em;margin-left:.05em}
+.args{display:grid;gap:16px;margin-top:32px;max-width:430px}
+.arg{display:flex;gap:14px;align-items:flex-start;border-top:1px solid var(--line);padding-top:14px}
+.arg .no{font:400 13px/1.5 var(--serif);color:var(--mint);min-width:22px}
+.merge{width:100%;max-width:430px;height:clamp(150px,20vh,230px)}
+
+/* ---------- S7 ---------- */
+#s7 .wrap{text-align:center;max-width:1180px}
+.trio{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(14px,1.8vw,26px);margin:clamp(24px,4vh,44px) 0}
+.tc{border:1px solid var(--line);border-radius:16px;padding:clamp(20px,2vw,32px);background:rgba(255,255,255,.028);backdrop-filter:blur(7px)}
+.tc h3{margin-bottom:8px}
+.final{font:400 clamp(19px,2.15vw,36px)/1.32 var(--serif);letter-spacing:-.015em;color:var(--ink)}
+.final em{font-style:normal;color:var(--mint)}
+
+/* ---------- chrome ---------- */
+#prog{position:fixed;left:0;bottom:0;height:2px;width:100%;z-index:6;background:rgba(255,255,255,.06)}
+#prog i{display:block;height:100%;background:var(--mint);width:0;transition:width .5s var(--e)}
+#pnum{position:fixed;left:clamp(18px,2.6vw,40px);bottom:22px;z-index:6;
+  font:500 10px/1 var(--sans);letter-spacing:.24em;color:var(--ink-38)}
+#pnum b{color:var(--ink);font-weight:500}
+#timer{position:fixed;top:clamp(16px,2.4vw,32px);right:clamp(16px,2.6vw,40px);z-index:6;
+  font:400 13px/1 var(--sans);letter-spacing:.14em;color:var(--ink-38);
+  font-variant-numeric:tabular-nums;transition:color .4s}
+#timer.warn{color:#E8B14A} #timer.over{color:#E06A5B}
+#timer i{display:inline-block;width:5px;height:5px;border-radius:50%;background:currentColor;
+  margin-right:9px;vertical-align:1px;opacity:.35}
+#timer.run i{opacity:1}
+#hint{position:fixed;right:clamp(16px,2.6vw,40px);bottom:22px;z-index:6;
+  font:400 10px/1 var(--sans);letter-spacing:.18em;text-transform:uppercase;color:var(--ink-38);
+  transition:opacity .5s}
+#hint.hide{opacity:0}
+kbd{font:500 10px/1 var(--sans);border:1px solid var(--line);border-radius:4px;padding:3px 5px;color:var(--ink-60)}
+
+/* ---------- overlays ---------- */
+.ov{position:fixed;inset:0;z-index:20;background:rgba(9,12,26,.90);backdrop-filter:blur(16px);
+  opacity:0;visibility:hidden;transition:opacity .28s var(--e),visibility 0s linear .3s;padding:clamp(30px,5vh,64px)}
+.ov.on{opacity:1;visibility:visible;transition:opacity .28s var(--e),visibility 0s}
+#map .g{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;max-width:1300px;margin:auto;height:100%;align-content:center}
+#map .t{border:1px solid var(--line);border-radius:14px;padding:20px;cursor:pointer;background:rgba(255,255,255,.03);
+  transition:border-color .2s,background .2s;min-height:130px;display:flex;flex-direction:column;justify-content:space-between}
+#map .t:hover,#map .t.cur{border-color:rgba(2,195,154,.55);background:rgba(2,195,154,.07)}
+#map .t .n{font:400 12px/1 var(--serif);color:var(--mint)}
+#map .t h3{font-size:16px}
+/* notes : bandeau discret en bas, la diapo reste visible */
+#notes{background:none;padding:0;pointer-events:none;backdrop-filter:none}
+#notes .nw{position:absolute;left:0;right:0;bottom:0;max-height:46vh;overflow:auto;
+  background:rgba(8,11,24,.93);backdrop-filter:blur(10px);border-top:1px solid rgba(2,195,154,.28);
+  padding:22px clamp(24px,5vw,80px) 26px;transform:translateY(14px);
+  transition:transform .3s var(--e)}
+#notes.on .nw{transform:none}
+#notes .hd{display:flex;justify-content:space-between;align-items:baseline;
+  border-bottom:1px solid var(--line);padding-bottom:11px;margin-bottom:14px}
+#notes ul{list-style:none;columns:2;column-gap:44px}
+#notes li{display:flex;gap:12px;padding:6px 0;font-size:clamp(13px,1.02vw,16px);
+  line-height:1.45;color:rgba(242,241,236,.84);break-inside:avoid}
+#notes li::before{content:"—";color:var(--mint);flex:none}
+#notes .tm{font:400 10px/1 var(--sans);letter-spacing:.2em;color:var(--ink-38);margin-top:14px;display:block}
+@media (max-width:1000px){#notes ul{columns:1}}
+
+/* ---------- print ---------- */
+html.print{height:auto;overflow:visible}
+body.print{overflow:visible;height:auto}
+body.print #scene,body.print #prog,body.print #pnum,body.print #timer,body.print #hint,body.print .ov{display:none!important}
+body.print::before{display:none}
+body.print{background:#fff;color:#12162E}
+body.print #deck{position:static;inset:auto}
+body.print .sec{position:static;opacity:1!important;visibility:visible!important;display:block;
+  min-height:0;page-break-after:always;break-after:page;border-bottom:1px solid #dcdcd6;padding:34px 40px 44px}
+body.print .sec .r{opacity:1!important;transform:none!important}
+body.print .split,body.print .cards3,body.print .trio,body.print .grid4{display:grid;grid-template-columns:1fr 1fr;gap:14px;height:auto}
+body.print .cards3,body.print .trio{grid-template-columns:repeat(3,1fr)}
+body.print .card{min-height:0;background:none;backdrop-filter:none;border-color:#dcdcd6}
+body.print .blk,body.print .tc{background:none;backdrop-filter:none;border-color:#dcdcd6}
+body.print h1{font-size:44px} body.print h2{font-size:27px}
+body.print p,body.print li{color:#3d4257;font-size:13px}
+body.print .eyebrow,body.print .blk .k,body.print .lb .t,body.print .pill{color:#046b55}
+body.print #s6 .price{font-size:76px;color:#12162E;-webkit-text-fill-color:#12162E;background:none}
+body.print #s1 .stack{margin-top:0!important}
+body.print #s7 .wrap>div{margin-top:0!important}
+body.print #s7 .wrap{text-align:left}
+body.print .final{margin-top:8px}
+body.print .merge{max-width:300px;height:120px}
+body.print #s4 .wrap>div[style]{position:static!important}
+body.print #s1 h1 .ch{opacity:1;transform:none}
+body.print #s5 .side{position:static;transform:none;max-width:none}
+body.print #lab{position:static}
+body.print #labSvg{display:none}
+body.print .lb{position:static;width:auto;opacity:1;transform:none;display:inline-block;
+  vertical-align:top;margin:0 22px 18px 0;text-align:left}
+body.print .lb .dot{display:none}
+body.print .lb .v{color:#12162E}
+body.print .lb .j{color:#5a6076}
+body.print .card .ico{height:56px}
+body.print .rule{width:280px;background:#dcdcd6}
+body.print .final{color:#12162E}
+body.print strong{color:#12162E;font-weight:600}
+body.print .card .ico [stroke]{stroke:#8a90a4}
+body.print #mergeSvg [stroke]{stroke:#8a90a4}
+body.print #mgTxt{fill:#9a9fb0}
+body.print #s7 .wrap{max-width:none}
+body.print #s6 .args{max-width:none}
+body.print .final em,body.print #s5 .big em{color:#046b55}
+body.print .pn{display:block;font:500 9px/1 var(--sans);letter-spacing:.24em;text-transform:uppercase;color:#9a9fb0;margin-bottom:18px}
+.pn{display:none}
+@media print{@page{size:landscape;margin:12mm} body.print .sec{border:none}}
+
+/* ---------- degraded mode ---------- */
+body.lo .blk,body.lo .card,body.lo .tc,body.lo .ov,body.lo #notes .nw{backdrop-filter:none}
+body.lo .ov{background:rgba(9,12,26,.97)}
+body.lo #s6 .price{background:none;-webkit-text-fill-color:var(--ink);color:var(--ink)}
+
+@media (max-width:1000px){
+  .split{grid-template-columns:1fr;align-content:center}
+  .cards3,.trio{grid-template-columns:1fr}
+  #map .g{grid-template-columns:1fr 1fr}
+  #s5 .side{position:static;transform:none;max-width:none;margin-top:auto}
+  .card{min-height:0}
+}
+@media (prefers-reduced-motion:reduce){.r,.ch{transition-duration:.01ms!important}}
+</style>
+</head>
+<body>
+<canvas id="scene"></canvas>
+<div id="deck">
+
+<!-- ========== 1. TITRE ========== -->
+<section class="sec" id="s1" data-t="Titre">
+  <div class="wrap">
+    <span class="pn">Section 1 / 7 — Titre</span>
+    <div class="stack">
+      <h1 id="title1" aria-label="NOMAD ONE"></h1>
+      <div class="rule"></div>
+      <p class="lead r" style="--d:1150ms">L'enceinte Bluetooth qui recharge aussi votre téléphone.</p>
+      <p class="eyebrow r" style="--d:1400ms;margin-top:30px">Projet d'innovation · 1<sup>re</sup> STI2D</p>
+    </div>
+  </div>
+</section>
+
+<!-- ========== 2. LE PUBLIC ========== -->
+<section class="sec" id="s2" data-t="Le public">
+  <div class="wrap split">
+    <div>
+      <span class="pn">Section 2 / 7 — Le public</span>
+      <span class="eyebrow r">01 — La cible</span>
+      <h2 class="r" style="--d:80ms;margin-top:16px">Les utilisateurs<br>nomades.</h2>
+      <div class="grid4">
+        <div class="blk r rs" style="--d:220ms"><span class="k">Qui</span>
+          <p>Voyageurs, étudiants, campeurs, van&#8209;lifers, télétravailleurs en déplacement.</p></div>
+        <div class="blk r rs" style="--d:320ms"><span class="k">Où</span>
+          <p>Train, avion, hôtel, camping, plage, montagne.</p></div>
+        <div class="blk r rs" style="--d:420ms"><span class="k">Usages</span>
+          <p>Écouter de la musique, sonoriser un moment, appeler en mains libres.</p></div>
+        <div class="blk r rs" style="--d:520ms"><span class="k">Contraintes</span>
+          <p>Peu de prises, place limitée dans le sac, chocs, pluie, poussière, budget serré.</p></div>
+      </div>
+    </div>
+    <div></div>
+  </div>
+</section>
+
+<!-- ========== 3. LES 3 ATTENTES ========== -->
+<section class="sec" id="s3" data-t="Les 3 attentes">
+  <div class="wrap">
+    <span class="pn">Section 3 / 7 — Les 3 attentes</span>
+    <span class="eyebrow r">02 — Le besoin</span>
+    <h2 class="r" style="--d:80ms;margin-top:16px">Trois attentes, toujours les mêmes.</h2>
+    <div class="cards3">
+      <div class="card r rs" style="--d:240ms">
+        <div class="ico"><svg viewBox="0 0 120 70" width="100%" height="100%" preserveAspectRatio="xMinYMid meet">
+          <rect x="2" y="12" width="96" height="46" rx="11" fill="none" stroke="rgba(242,241,236,.35)" stroke-width="1.6"/>
+          <path d="M104 28h6a5 5 0 0 1 5 5v4a5 5 0 0 1-5 5h-6z" fill="rgba(242,241,236,.35)"/>
+          <rect class="fill" x="9" y="19" width="82" height="32" rx="6" fill="#02C39A" style="transform-origin:9px 0"/>
+        </svg></div>
+        <span class="n">01</span><h3>Autonomie</h3>
+        <p>Tenir toute une journée, un week&#8209;end, un festival — loin de toute prise de courant.</p>
+      </div>
+      <div class="card r rs" style="--d:360ms">
+        <div class="ico"><svg viewBox="0 0 120 70" width="100%" height="100%" preserveAspectRatio="xMinYMid meet">
+          <path d="M18 26h56l6 40H12z" fill="none" stroke="rgba(242,241,236,.35)" stroke-width="1.6" stroke-linejoin="round"/>
+          <path class="flap" d="M30 26c0-11 5-17 16-17s16 6 16 17" fill="none" stroke="#02C39A" stroke-width="2.2"
+                stroke-linecap="round" stroke-dasharray="66" stroke-dashoffset="66"/>
+          <circle class="sq" cx="46" cy="45" r="7" fill="none" stroke="rgba(2,195,154,.5)" stroke-width="1.6"/>
+        </svg></div>
+        <span class="n">02</span><h3>Compacité</h3>
+        <p>Assez petite pour se glisser dans un sac déjà plein, assez légère pour l'oublier.</p>
+      </div>
+      <div class="card r rs" style="--d:480ms">
+        <div class="ico"><svg viewBox="0 0 120 70" width="100%" height="100%" preserveAspectRatio="xMinYMid meet">
+          <path d="M6 60h100" stroke="rgba(242,241,236,.22)" stroke-width="1.6" stroke-linecap="round"/>
+          <path class="drop" d="M34 8c8 10 12 16 12 21a12 12 0 1 1-24 0c0-5 4-11 12-21z" fill="#02C39A"/>
+          <circle class="rip" cx="70" cy="60" r="4" fill="none" stroke="rgba(2,195,154,.55)" stroke-width="1.4"/>
+          <circle class="rip2" cx="70" cy="60" r="4" fill="none" stroke="rgba(2,195,154,.35)" stroke-width="1.2"/>
+        </svg></div>
+        <span class="n">03</span><h3>Résistance</h3>
+        <p>Supporter la pluie, le sable, la poussière et les chocs du transport sans précaution.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== 4. CARACTÉRISTIQUES ========== -->
+<section class="sec" id="s4" data-t="Caractéristiques">
+  <div class="wrap">
+    <span class="pn">Section 4 / 7 — Les caractéristiques</span>
+    <div style="position:absolute;top:0;left:0">
+      <span class="eyebrow r">03 — La solution</span>
+      <h2 class="r" style="--d:80ms;margin-top:14px;max-width:9em">Vue éclatée.</h2>
+    </div>
+    <div id="lab">
+      <svg id="labSvg"><g id="labG"></g></svg>
+      <div class="lb left"  data-a="bat"  style="--i:0"><span class="dot"></span><span class="v">24 h</span><span class="t">Autonomie</span><span class="j">Batterie 8000 mAh : un week-end entier sans prise.</span></div>
+      <div class="lb left"  data-a="driv" style="--i:1"><span class="dot"></span><span class="v">20 W</span><span class="t">Puissance</span><span class="j">Assez pour sonoriser une pièce ou une terrasse.</span></div>
+      <div class="lb left"  data-a="body" style="--i:2"><span class="dot"></span><span class="v">450 g · 15 cm</span><span class="t">Format</span><span class="j">Tient dans une poche de sac à dos.</span></div>
+      <div class="lb right" data-a="gril" style="--i:3"><span class="dot"></span><span class="v">IP67</span><span class="t">Résistance</span><span class="j">Étanche et anti-poussière : pluie, sable, plage.</span></div>
+      <div class="lb right" data-a="btn"  style="--i:4"><span class="dot"></span><span class="v">BT 5.3</span><span class="t">Connexion</span><span class="j">Appairage stéréo de deux enceintes, micro pour les appels.</span></div>
+      <div class="lb right" data-a="carab" style="--i:5"><span class="dot"></span><span class="v">Mousqueton</span><span class="t">Transport</span><span class="j">S'accroche au sac : jamais rangée, toujours prête.</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== 5. INNOVATION ========== -->
+<section class="sec" id="s5" data-t="L'innovation">
+  <div class="wrap">
+    <span class="pn">Section 5 / 7 — L'innovation</span>
+    <div class="side">
+      <span class="eyebrow r">04 — L'innovation</span>
+      <h2 class="r" style="--d:90ms;margin-top:16px">Un port USB&#8209;C<br>de <em style="font-style:normal;color:var(--mint)">sortie</em>.</h2>
+      <p class="r" style="--d:220ms;margin-top:20px;max-width:24em">L'enceinte devient aussi une batterie externe. Elle recharge votre téléphone <strong>pendant qu'elle joue</strong>.</p>
+      <p class="big r" style="--d:340ms">« Un objet en moins<br>dans le <em>sac</em>. »</p>
+      <div class="pills">
+        <span class="pill r" style="--d:480ms">Joue</span>
+        <span class="pill r" style="--d:560ms">+ Recharge</span>
+        <span class="pill r" style="--d:640ms">En même temps</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== 6. LE PRIX ========== -->
+<section class="sec" id="s6" data-t="Le prix">
+  <div class="wrap split">
+    <div>
+      <span class="pn">Section 6 / 7 — Le prix</span>
+      <span class="eyebrow r">05 — Le positionnement</span>
+      <div class="price r" style="--d:60ms"><span id="cnt">0</span><span class="eur">€</span></div>
+      <div class="args">
+        <div class="arg r" style="--d:600ms"><span class="no">01</span><p><strong>Le prix d'une seule enceinte</strong> de cette gamme, pour deux fonctions.</p></div>
+        <div class="arg r" style="--d:700ms"><span class="no">02</span><p><strong>20 à 30 € économisés</strong> sur la batterie externe qu'on n'achète plus.</p></div>
+        <div class="arg r" style="--d:800ms"><span class="no">03</span><p><strong>Un seul objet à charger</strong>, à ranger et à ne pas oublier.</p></div>
+      </div>
+    </div>
+    <div class="r rs" style="--d:400ms;display:flex;flex-direction:column;justify-content:center;align-items:center">
+      <svg class="merge" id="mergeSvg" viewBox="0 0 300 150" preserveAspectRatio="xMidYMid meet">
+        <g id="mg1">
+          <rect x="34" y="58" width="86" height="34" rx="17" fill="none" stroke="rgba(242,241,236,.42)" stroke-width="1.6"/>
+          <circle cx="57" cy="75" r="9" fill="none" stroke="rgba(242,241,236,.30)" stroke-width="1.2"/>
+          <circle cx="97" cy="75" r="9" fill="none" stroke="rgba(242,241,236,.30)" stroke-width="1.2"/>
+        </g>
+        <g id="mg2">
+          <rect x="180" y="60" width="60" height="30" rx="8" fill="none" stroke="rgba(242,241,236,.42)" stroke-width="1.6"/>
+          <rect x="188" y="68" width="26" height="14" rx="3" fill="rgba(2,195,154,.75)"/>
+        </g>
+        <text id="mgTxt" x="150" y="128" text-anchor="middle" fill="rgba(242,241,236,.45)"
+              style="font:500 9px Inter,sans-serif;letter-spacing:.22em;text-transform:uppercase">Deux objets → un seul</text>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- ========== 7. CONCLUSION ========== -->
+<section class="sec" id="s7" data-t="Conclusion">
+  <div class="wrap">
+    <span class="pn">Section 7 / 7 — Conclusion</span>
+    <div style="margin-top:min(42vh,430px)">
+      <span class="eyebrow r">06 — En résumé</span>
+      <div class="trio">
+        <div class="tc r rs" style="--d:180ms"><h3>Un objet en moins</h3><p>Enceinte et batterie externe réunies.</p></div>
+        <div class="tc r rs" style="--d:290ms"><h3>Prête pour tout</h3><p>IP67, 24 h d'autonomie, 450 g.</p></div>
+        <div class="tc r rs" style="--d:400ms"><h3>Toujours à portée</h3><p>Mousqueton et sangle intégrés.</p></div>
+      </div>
+      <p class="final r" style="--d:560ms">Même prix que la concurrence,<br><em>valeur d'usage supérieure.</em></p>
+    </div>
+  </div>
+</section>
+</div>
+
+<!-- ========== chrome ========== -->
+<div id="prog"><i id="progI"></i></div>
+<div id="pnum"><b id="pcur">01</b> / 07</div>
+<div id="timer"><i></i><span id="tval">0:00</span></div>
+<div id="hint"><kbd>→</kbd> avancer · <kbd>N</kbd> notes · <kbd>Échap</kbd> plan</div>
+
+<div class="ov" id="map"><div class="g" id="mapG"></div></div>
+<div class="ov" id="notes"><div class="nw">
+  <div class="hd"><h3 id="nTitle">Notes</h3><span class="eyebrow" id="nNum">01 / 07</span></div>
+  <ul id="nList"></ul>
+  <span class="tm" id="nTime"></span>
+</div></div>
+
+<style>
+/* animations d'icônes, déclenchées quand la section 3 est active */
+@keyframes batFill{from{transform:scaleX(.06)}to{transform:scaleX(1)}}
+@keyframes flapClose{to{stroke-dashoffset:0}}
+@keyframes dropBounce{
+  0%{transform:translate(0,-46px);opacity:0}
+  18%{opacity:1}
+  46%{transform:translate(6px,0)}
+  62%{transform:translate(14px,-18px) scale(.92)}
+  80%{transform:translate(24px,0) scale(1)}
+  100%{transform:translate(34px,-6px) scale(.9);opacity:0}
+}
+@keyframes ripple{0%{r:3;opacity:.9}100%{r:26;opacity:0}}
+.sec.on .card .fill{animation:batFill 1.5s var(--e) .55s both}
+.sec.on .card .flap{animation:flapClose .8s var(--e) .7s both}
+.sec.on .card .drop{animation:dropBounce 2.1s var(--e) .6s infinite}
+.sec.on .card .rip{animation:ripple 2.1s var(--e) 1.35s infinite}
+.sec.on .card .rip2{animation:ripple 2.1s var(--e) 1.62s infinite}
+@keyframes mgMerge{
+  0%,22%{transform:translateX(0);opacity:1}
+  70%,100%{transform:translateX(var(--mx));opacity:var(--mo)}
+}
+.sec.on #mg1{animation:mgMerge 2.4s var(--e) .9s both;--mx:44px;--mo:1}
+.sec.on #mg2{animation:mgMerge 2.4s var(--e) .9s both;--mx:-92px;--mo:.25}
+body.lo .sec.on .card .drop,body.lo .sec.on .card .rip,body.lo .sec.on .card .rip2{animation-iteration-count:1}
+</style>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+"use strict";
+/* =====================================================================
+   NOMAD ONE — présentation interactive (fichier autonome)
+   Three.js r128 · aucune ressource externe hors police et CDN
+   ===================================================================== */
+var HAS3D = (typeof THREE !== "undefined");
+var C = { bg:0x12162E, deep:0x065A82, mint:0x02C39A, ink:0xF2F1EC, shell:0x1B2142, dark:0x0E1226 };
+
+/* ------------------------------------------------------------------ */
+/* 1. Textures procédurales (canvas)                                    */
+/* ------------------------------------------------------------------ */
+function cv(w,h){ var c=document.createElement("canvas"); c.width=w; c.height=h; return c; }
+
+/* grille perforée : petits trous en quinconce */
+function grilleTexture(){
+  var w=1024,h=256,c=cv(w,h),x=c.getContext("2d");
+  var g=x.createLinearGradient(0,0,0,h);
+  g.addColorStop(0,"#252c52"); g.addColorStop(.5,"#161b38"); g.addColorStop(1,"#252c52");
+  x.fillStyle=g; x.fillRect(0,0,w,h);
+  var step=12, r=3.0;
+  for(var row=0, y=step/2; y<h; y+=step*0.87, row++){
+    for(var xx=(row%2?step/2:0); xx<w+step; xx+=step){
+      x.beginPath(); x.arc(xx,y,r,0,6.2832);
+      x.fillStyle="#05070f"; x.fill();
+      x.beginPath(); x.arc(xx-.6,y-.7,r*0.72,0,6.2832);
+      x.fillStyle="rgba(120,140,190,.16)"; x.fill();
+    }
+  }
+  var t=new THREE.CanvasTexture(c);
+  t.wrapS=t.wrapT=THREE.RepeatWrapping; t.repeat.set(1,1);
+  t.anisotropy=8; t.encoding=THREE.sRGBEncoding;
+  return t;
+}
+/* même motif en niveaux de gris pour le relief */
+function grilleBump(){
+  var w=512,h=128,c=cv(w,h),x=c.getContext("2d");
+  x.fillStyle="#b8b8b8"; x.fillRect(0,0,w,h);
+  var step=4.6,r=1.28;
+  for(var row=0,y=step/2;y<h;y+=step*0.87,row++)
+    for(var xx=(row%2?step/2:0);xx<w+step;xx+=step){
+      x.beginPath(); x.arc(xx,y,r,0,6.2832); x.fillStyle="#101010"; x.fill();
+    }
+  var t=new THREE.CanvasTexture(c);
+  t.wrapS=t.wrapT=THREE.RepeatWrapping; t.repeat.set(10,2);
+  return t;
+}
+/* ombre douce au sol */
+function shadowTexture(){
+  var s=256,c=cv(s,s),x=c.getContext("2d");
+  var g=x.createRadialGradient(s/2,s/2,0,s/2,s/2,s/2);
+  g.addColorStop(0,"rgba(0,0,0,.62)"); g.addColorStop(.45,"rgba(0,0,0,.26)");
+  g.addColorStop(1,"rgba(0,0,0,0)");
+  x.fillStyle=g; x.fillRect(0,0,s,s);
+  return new THREE.CanvasTexture(c);
+}
+/* environnement équirectangulaire : studio sombre + bandeau clair */
+function envTexture(){
+  var w=512,h=256,c=cv(w,h),x=c.getContext("2d");
+  var g=x.createLinearGradient(0,0,0,h);
+  g.addColorStop(0,"#3d4a72"); g.addColorStop(.42,"#161b38");
+  g.addColorStop(.55,"#0b0e20"); g.addColorStop(1,"#05060e");
+  x.fillStyle=g; x.fillRect(0,0,w,h);
+  x.globalAlpha=.55;
+  var b=x.createRadialGradient(w*.26,h*.22,0,w*.26,h*.22,h*.5);
+  b.addColorStop(0,"#ffffff"); b.addColorStop(1,"rgba(255,255,255,0)");
+  x.fillStyle=b; x.fillRect(0,0,w,h);
+  var m=x.createRadialGradient(w*.78,h*.36,0,w*.78,h*.36,h*.42);
+  m.addColorStop(0,"#0ad9ab"); m.addColorStop(1,"rgba(10,217,171,0)");
+  x.fillStyle=m; x.fillRect(0,0,w,h);
+  x.globalAlpha=1;
+  var t=new THREE.CanvasTexture(c);
+  t.mapping=THREE.EquirectangularReflectionMapping;
+  return t;
+}
+/* écran du téléphone : icône batterie qui se remplit */
+var scrCv=null, scrCtx=null, scrTex=null;
+function drawScreen(p){
+  if(!scrCtx) return;
+  var x=scrCtx,W=scrCv.width,H=scrCv.height;
+  x.fillStyle="#05070f"; x.fillRect(0,0,W,H);
+  var g=x.createLinearGradient(0,0,0,H);
+  g.addColorStop(0,"rgba(2,195,154,.16)"); g.addColorStop(.7,"rgba(6,90,130,.05)");
+  x.fillStyle=g; x.fillRect(0,0,W,H);
+  var bw=W*.30, bh=H*.30, bx=(W-bw)/2, by=H*.30;
+  x.strokeStyle="rgba(242,241,236,.55)"; x.lineWidth=W*.016;
+  x.beginPath(); x.rect(bx,by,bw,bh); x.stroke();
+  x.fillStyle="rgba(242,241,236,.55)";
+  x.fillRect(bx+bw*.32, by-H*.032, bw*.36, H*.032);
+  var pad=W*.022, ih=(bh-pad*2)*p;
+  x.fillStyle="#02C39A";
+  x.fillRect(bx+pad, by+bh-pad-ih, bw-pad*2, ih);
+  x.fillStyle="#F2F1EC";
+  x.font="600 "+Math.round(W*.145)+"px Inter, Helvetica, Arial, sans-serif";
+  x.textAlign="center";
+  x.fillText(Math.round(p*100)+" %", W/2, H*.78);
+  x.fillStyle="rgba(2,195,154,.9)";
+  x.font="500 "+Math.round(W*.058)+"px Inter, Helvetica, Arial, sans-serif";
+  x.fillText("EN CHARGE", W/2, H*.86);
+  if(scrTex) scrTex.needsUpdate=true;
+}
+</script>
+<script>
+/* ------------------------------------------------------------------ */
+/* 2. Scène, matériaux, modèle de l'enceinte                            */
+/* ------------------------------------------------------------------ */
+var renderer,scene,camera,rig,model,P={},phoneG,cableMesh,plugMesh,cableCurve,pulses=[],waves=[],shadowM;
+var envMap=null, lowMode=false, ready=false;
+var cvs=document.getElementById("scene");
+
+function profileLathe(len,rad,fil,seg,capL,capR){
+  /* profil 2D (rayon,hauteur) tourné autour de Y → corps à arêtes adoucies */
+  var p=[],h=len/2,i,a;
+  if(capL) p.push(new THREE.Vector2(0,-h)); else p.push(new THREE.Vector2(rad,-h));
+  if(capL){
+    p.push(new THREE.Vector2(rad-fil,-h));
+    for(i=1;i<=seg;i++){ a=-Math.PI/2+(i/seg)*(Math.PI/2);
+      p.push(new THREE.Vector2(rad-fil+Math.cos(a)*fil,-h+fil+Math.sin(a)*fil)); }
+  }
+  if(capR){
+    for(i=0;i<=seg;i++){ a=(i/seg)*(Math.PI/2);
+      p.push(new THREE.Vector2(rad-fil+Math.cos(a)*fil,h-fil+Math.sin(a)*fil)); }
+    p.push(new THREE.Vector2(0,h));
+  } else p.push(new THREE.Vector2(rad,h));
+  return new THREE.LatheGeometry(p,64);
+}
+/* embout : face plate + double chanfrein + léger galbe vers le centre */
+function chamferCapGeo(len,R,dir){
+  var h=len/2,p=[],i,t;
+  p.push(new THREE.Vector2(0,-h));
+  p.push(new THREE.Vector2(R*0.44,-h));
+  p.push(new THREE.Vector2(R*0.52,-h+.012));
+  p.push(new THREE.Vector2(R*0.795,-h+.072));   /* 1er chanfrein */
+  p.push(new THREE.Vector2(R*0.828,-h+.088));
+  p.push(new THREE.Vector2(R*0.947,-h+.170));   /* 2e chanfrein */
+  p.push(new THREE.Vector2(R*0.962,-h+.196));
+  for(i=1;i<=7;i++){ t=i/7;                     /* galbe : s'affine vers l'extrémité */
+    p.push(new THREE.Vector2(R*(0.968+0.032*t*t), -h+.196+(len-.196)*t)); }
+  var g=new THREE.LatheGeometry(p,72);
+  g.rotateZ(dir>0?-Math.PI/2:Math.PI/2);
+  return g;
+}
+/* corps : cylindre très légèrement galbé (bombé au centre) */
+function barrelGeo(len,R,bulge){
+  var h=len/2,p=[],i,t,n=16;
+  for(i=0;i<=n;i++){ t=i/n;
+    p.push(new THREE.Vector2(R*(1+bulge*Math.sin(Math.PI*t)),-h+len*t)); }
+  var g=new THREE.LatheGeometry(p,72);
+  g.rotateZ(Math.PI/2);
+  return g;
+}
+/* méplat : on rabat la face inférieure pour que l'objet pose à plat */
+function flatBottom(geo,yMin){
+  var a=geo.attributes.position,i;
+  for(i=0;i<a.count;i++){ if(a.getY(i)<yMin) a.setY(i,yMin); }
+  a.needsUpdate=true; geo.computeVertexNormals(); return geo;
+}
+function roundedRectShape(w,h,r){
+  var s=new THREE.Shape(),x=-w/2,y=-h/2;
+  s.moveTo(x+r,y); s.lineTo(x+w-r,y); s.absarc(x+w-r,y+r,r,-Math.PI/2,0);
+  s.lineTo(x+w,y+h-r); s.absarc(x+w-r,y+h-r,r,0,Math.PI/2);
+  s.lineTo(x+r,y+h); s.absarc(x+r,y+h-r,r,Math.PI/2,Math.PI);
+  s.lineTo(x,y+r); s.absarc(x+r,y+r,r,Math.PI,Math.PI*1.5);
+  return s;
+}
+function mat(o){ var m=new THREE.MeshStandardMaterial(o); if(envMap){m.envMap=envMap;} return m; }
+
+function buildModel(){
+  model=new THREE.Group();
+  var rubber = mat({color:0x191E3C,roughness:.94,metalness:.03,envMapIntensity:.22});
+  var rubberD= mat({color:0x11152C,roughness:.95,metalness:.03,envMapIntensity:.16});
+  var metal  = mat({color:0x9AA6C4,roughness:.3,metalness:.95,envMapIntensity:1.0});
+  var mint   = mat({color:C.mint,roughness:.55,metalness:.2,emissive:0x02C39A,emissiveIntensity:.04,envMapIntensity:.4});
+  var deep   = mat({color:C.deep,roughness:.55,metalness:.35,envMapIntensity:.6});
+  var black  = mat({color:0x07090F,roughness:.6,metalness:.2,envMapIntensity:.4});
+  var strapM = mat({color:0x2A3157,roughness:.95,metalness:.02,envMapIntensity:.2});
+
+  var L=2.8,R=0.66;            /* 15 cm de long pour ~7 cm de diamètre → ratio 2:1 */
+  var FLAT=-R*0.90;            /* hauteur du méplat inférieur */
+
+  /* châssis interne (visible en vue éclatée) */
+  var chassis=new THREE.Mesh(profileLathe(L*0.82,R*0.90,.10,10,true,true),rubberD);
+  chassis.rotation.z=Math.PI/2; model.add(chassis); P.body=chassis;
+
+  /* grille perforée */
+  var gTex=grilleTexture(), gBump=gTex;   /* même trame pour la couleur et le relief */
+  var grille=new THREE.Mesh(
+    flatBottom(barrelGeo(L*0.68,R+.015,.028),FLAT),
+    mat({color:0xffffff,map:gTex,bumpMap:gBump,bumpScale:.014,roughness:.78,metalness:.30,envMapIntensity:.55,side:THREE.DoubleSide})
+  );
+  model.add(grille); P.gril=grille;
+
+  /* embouts arrondis */
+  var capL=new THREE.Mesh(flatBottom(chamferCapGeo(0.48,R+.020,-1),FLAT),rubber);
+  capL.position.x=-(L*0.34+0.24-0.01); model.add(capL); P.capL=capL;
+  var capR=new THREE.Mesh(flatBottom(chamferCapGeo(0.48,R+.020,1),FLAT),rubber);
+  capR.position.x= (L*0.34+0.24-0.01); model.add(capR); P.capR=capR;
+
+  /* liserés menthe aux jonctions */
+  var ringsG=new THREE.Group();
+  [-1,1].forEach(function(s){
+    var ring=new THREE.Mesh(new THREE.TorusGeometry(R+.012,.012,8,64),mint);
+    ring.rotation.y=Math.PI/2; ring.position.x=s*(L*0.34+0.005);
+    ringsG.add(ring);
+  });
+  model.add(ringsG); P.rings=ringsG;
+
+  /* haut-parleur interne (cône) */
+  var driver=new THREE.Group();
+  var cone=new THREE.Mesh(new THREE.ConeGeometry(.42,.30,40,1,true),
+            mat({color:0x1E2647,roughness:.7,metalness:.4,side:THREE.DoubleSide,envMapIntensity:.5}));
+  cone.rotation.z=-Math.PI/2; driver.add(cone);
+  var dome=new THREE.Mesh(new THREE.SphereGeometry(.12,24,16),deep);
+  dome.position.x=.14; dome.scale.x=.7; driver.add(dome);
+  var basket=new THREE.Mesh(new THREE.TorusGeometry(.42,.030,8,40),rubberD);
+  basket.rotation.y=Math.PI/2; basket.position.x=-.17; driver.add(basket);
+  driver.position.x=-.42; model.add(driver); P.driv=driver;
+
+  /* batterie interne */
+  var bat=new THREE.Group();
+  var cell=new THREE.Mesh(new THREE.CylinderGeometry(.235,.235,1.05,32),
+            mat({color:0x0F6E86,roughness:.45,metalness:.6,envMapIntensity:.8}));
+  cell.rotation.z=Math.PI/2; bat.add(cell);
+  [-1,1].forEach(function(s){
+    var cap=new THREE.Mesh(new THREE.CylinderGeometry(.242,.242,.06,32),mint);
+    cap.rotation.z=Math.PI/2; cap.position.x=s*.53; bat.add(cap);
+  });
+  bat.position.x=.52; model.add(bat); P.bat=bat;
+
+  /* pavé de commandes + boutons en relief */
+  var btns=new THREE.Group();
+  var pad=new THREE.Mesh(new THREE.ExtrudeGeometry(roundedRectShape(.80,.26,.11),
+          {depth:.05,bevelEnabled:true,bevelSize:.02,bevelThickness:.02,bevelSegments:2,curveSegments:8}),rubberD);
+  pad.rotation.x=-Math.PI/2; pad.position.y=R-.035; btns.add(pad);
+  var bgeo=new THREE.CylinderGeometry(.062,.070,.045,24);
+  [[-.255,0x2A3157],[0,C.mint],[.255,0x2A3157]].forEach(function(b){
+    var m=new THREE.Mesh(bgeo, b[1]===C.mint?mint:mat({color:b[1],roughness:.7,metalness:.15,envMapIntensity:.4}));
+    m.position.set(b[0],R+.03,0); btns.add(m);
+  });
+  model.add(btns); P.btn=btns;
+
+  /* port USB-C de sortie (embout droit) */
+  var port=new THREE.Group();
+  var plate=new THREE.Mesh(new THREE.ExtrudeGeometry(roundedRectShape(.40,.205,.078),
+            {depth:.03,bevelEnabled:true,bevelSize:.012,bevelThickness:.012,bevelSegments:2,curveSegments:8}),rubberD);
+  port.add(plate);
+  var slot=new THREE.Mesh(new THREE.ExtrudeGeometry(roundedRectShape(.245,.075,.037),
+           {depth:.07,bevelEnabled:false,curveSegments:8}),black);
+  slot.position.z=.031; port.add(slot);
+  var tongue=new THREE.Mesh(new THREE.BoxGeometry(.165,.024,.045),
+             mat({color:0x39405E,roughness:.5,metalness:.7,envMapIntensity:.7}));
+  tongue.position.z=.062; port.add(tongue);
+  var halo=new THREE.Mesh(new THREE.TorusGeometry(.162,.0068,8,40),mint);
+  halo.scale.set(1,.62,1); halo.position.z=.034; port.add(halo);
+  port.position.set(L/2+.028,-.05,0); port.rotation.y=Math.PI/2;
+  model.add(port); P.port=port;
+  P.portAnchor=new THREE.Object3D(); P.portAnchor.position.set(L/2+.11,-.05,0); model.add(P.portAnchor);
+
+  /* sangle (tore aplati) + mousqueton */
+  var strap=new THREE.Mesh(new THREE.TorusGeometry(R+.10,.055,10,48),strapM);
+  strap.rotation.y=Math.PI/2; strap.position.x=0.95; strap.scale.set(1,1,.34);
+  model.add(strap); P.strap=strap;
+
+  var carab=new THREE.Group();
+  var hook=new THREE.Mesh(new THREE.TorusGeometry(.20,.042,10,40,Math.PI*1.62),metal);
+  carab.add(hook);
+  var gate=new THREE.Mesh(new THREE.CylinderGeometry(.028,.028,.34,12),metal);
+  gate.rotation.z=Math.PI*0.30; gate.position.set(.07,.02,0); carab.add(gate);
+  var eye=new THREE.Mesh(new THREE.TorusGeometry(.075,.028,8,26),metal);
+  eye.position.y=-.28; carab.add(eye);
+  carab.position.set(0.95,R+.205,0); carab.rotation.z=Math.PI*0.04; carab.scale.setScalar(.82);
+  model.add(carab); P.carab=carab;
+
+  model.scale.y=0.90;          /* section légèrement elliptique, pas un tube parfait */
+
+  /* décalages de la vue éclatée */
+  function ex(o,x,y,z){ o.userData.base=o.position.clone(); o.userData.ex=new THREE.Vector3(x,y,z); }
+  ex(P.gril,-.10,1.25,-.10); ex(P.rings,-.10,1.25,-.10);
+  ex(P.capL,-1.20,.10,-.05); ex(P.capR,1.30,.05,-.05);
+  ex(P.driv,-.60,-1.20,.55); ex(P.bat,-.05,-1.30,.10); ex(P.btn,.10,.80,1.15);
+  ex(P.port,1.10,-.60,.70); ex(P.strap,.55,-.05,1.50); ex(P.carab,.95,1.00,1.05);
+  ex(P.body,0,0,0);
+
+  return model;
+}
+
+function buildPhone(){
+  /* à l'échelle : 15,5 cm de haut — sert de référence de taille dans la scène */
+  var g=new THREE.Group();
+  phBodyM=mat({color:0x0E1226,roughness:.32,metalness:.75,envMapIntensity:.9,transparent:true,opacity:1});
+  var body=new THREE.Mesh(new THREE.ExtrudeGeometry(roundedRectShape(1.32,2.72,.20),
+    {depth:.14,bevelEnabled:true,bevelSize:.028,bevelThickness:.028,bevelSegments:3,curveSegments:10}),phBodyM);
+  g.add(body);
+  scrCv=cv(256,512); scrCtx=scrCv.getContext("2d");
+  scrTex=new THREE.CanvasTexture(scrCv); scrTex.encoding=THREE.sRGBEncoding;
+  drawScreen(0.08);
+  phScrM=new THREE.MeshBasicMaterial({map:scrTex,transparent:true,opacity:1});
+  var scr=new THREE.Mesh(new THREE.PlaneGeometry(1.17,2.52),phScrM);
+  scr.position.z=.171; g.add(scr);
+  return g;
+}
+</script>
+<script>
+/* ------------------------------------------------------------------ */
+/* 3. Mise en place de la scène                                         */
+/* ------------------------------------------------------------------ */
+var CAM_Z=11.4, FOV=35, halfW=4.5, U=2.55, FIT=1;
+var cur={p:new THREE.Vector3(),r:new THREE.Vector2(),s:1,ex:0}, tgt={p:new THREE.Vector3(),r:new THREE.Vector2(),s:1,ex:0};
+var spinNow=0, spinTgt=.18, mouseAmp=1, mAmpTgt=1, mx=0,my=0,mxT=0,myT=0, spinAcc=0;
+var s5G=null, s5t=0, batP=.08, phBodyM=null, phScrM=null, s5PhonePos=new THREE.Vector3(), s5PhoneRot=new THREE.Euler();
+
+function initGL(){
+  renderer=new THREE.WebGLRenderer({canvas:cvs,antialias:true,alpha:true,powerPreference:"high-performance"});
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,1.75));
+  renderer.setClearColor(0x000000,0);
+  if(renderer.outputEncoding!==undefined) renderer.outputEncoding=THREE.sRGBEncoding;
+  scene=new THREE.Scene();
+  camera=new THREE.PerspectiveCamera(FOV,1,.1,100);
+  camera.position.set(0,2.15,CAM_Z); camera.lookAt(0,-.32,0);   /* légère plongée */
+
+  /* environnement (reflet léger) */
+  try{
+    var pm=new THREE.PMREMGenerator(renderer); pm.compileEquirectangularShader();
+    envMap=pm.fromEquirectangular(envTexture()).texture;
+  }catch(e){ envMap=null; }
+
+  /* éclairage trois points */
+  scene.add(new THREE.AmbientLight(0x222A47,.72));
+  var key=new THREE.DirectionalLight(0xEAF0FF,1.65); key.position.set(-3.4,4.2,4.0); scene.add(key);
+  var fill=new THREE.DirectionalLight(0x2F7FB5,.62); fill.position.set(4.6,-.6,2.4); scene.add(fill);
+  var rim=new THREE.DirectionalLight(0x02C39A,1.15); rim.position.set(2.0,1.6,-4.2); scene.add(rim);
+  scene.add(new THREE.HemisphereLight(0x54648A,0x070912,.38));
+
+  rig=new THREE.Group(); scene.add(rig);
+  rig.add(buildModel());
+
+  shadowM=new THREE.Mesh(new THREE.PlaneGeometry(5.2,5.2),
+    new THREE.MeshBasicMaterial({map:shadowTexture(),transparent:true,depthWrite:false,opacity:.85}));
+  shadowM.rotation.x=-Math.PI/2; shadowM.material.opacity=.55;
+  scene.add(shadowM);
+
+  phoneG=buildPhone(); phoneG.visible=false; scene.add(phoneG);
+  layout(); buildS5();
+  ready=true;
+  /* certains navigateurs n'ont pas encore la taille finale au premier cadre */
+  setTimeout(function(){ layout(); buildS5(); },60);
+}
+
+function layout(){
+  /* garde-fou : au tout premier appel la fenêtre peut encore mesurer 0 */
+  var w=Math.max(320,window.innerWidth||document.documentElement.clientWidth||1280);
+  var h=Math.max(240,window.innerHeight||document.documentElement.clientHeight||720);
+  camera.aspect=w/h; camera.updateProjectionMatrix();
+  renderer.setSize(w,h,false);
+  halfW=Math.tan(FOV*Math.PI/360)*CAM_Z*camera.aspect;
+  U=Math.min(halfW*.50,2.62);
+  if(w<1000) U=0;                       /* petit écran : tout recentré */
+  FIT=Math.max(.52,Math.min(1,camera.aspect/1.50));  /* l'objet reste dans le cadre */
+}
+
+/* états 3D par section : px = position horizontale (fraction), y,z, échelle, rotation */
+var ST=[
+ {px:0,   y:1.66, z:-.3, s:1.00,rx:.11, ry:-.40, ex:0, spin:.17, amp:1.0, ph:1},
+ {px:1,   y:.10,  z:-.4, s:1.00,rx:.15, ry:-.55, ex:0, spin:.22, amp:1.0, ph:1},
+ {px:.62, y:-4.55,z:-5.0,s:1.10,rx:.03, ry:-.38, ex:0, spin:.15, amp:.7,  ph:0},
+ {px:.05, y:-.25, z:-.3, s:.80, rx:.24, ry:-.55, ex:1, spin:.045,amp:.45, ph:0},
+ {px:.02, y:-.18, z:.3,  s:1.00,rx:.05, ry:-.98, ex:0, spin:0,   amp:.10, ph:2},
+ {px:.94, y:2.05, z:-3.3,s:.72, rx:.14, ry:-.44, ex:0, spin:.20, amp:.8,  ph:0},
+ {px:0,   y:1.62, z:-.3, s:.94, rx:.11, ry:-.46, ex:0, spin:.13, amp:1.0, ph:1}
+];
+function stateX(st){ return st.px*U; }
+
+/* ------------------------------------------------------------------ */
+/* 4. Section 5 : câble, pulses d'énergie, ondes sonores                */
+/* ------------------------------------------------------------------ */
+function restMatrix(i){
+  var st=ST[i],g=new THREE.Group();
+  g.position.set(stateX(st),st.y,st.z);
+  g.rotation.set(st.rx,st.ry,0); g.scale.setScalar(st.s*FIT);
+  g.updateMatrixWorld(true); return g;
+}
+function buildS5(){
+  if(s5G){ scene.remove(s5G); s5G=null; }
+  if(cableMesh){ scene.remove(cableMesh); cableMesh.geometry.dispose(); cableMesh=null; }
+  pulses.length=0; waves.length=0;
+
+  var ref=restMatrix(4);
+  var portW=P.portAnchor.position.clone().applyMatrix4(ref.matrixWorld);
+  var phoneX=(U>0? 1.02*U : 1.55), phoneY=.02, phoneZ=.90;
+  s5PhonePos.set(phoneX,phoneY,phoneZ); s5PhoneRot.set(.04,-.30,.02);
+  phoneG.position.copy(s5PhonePos); phoneG.rotation.copy(s5PhoneRot);
+
+  var plugW=new THREE.Vector3(phoneX-.06,phoneY-1.00,phoneZ+.04);
+  cableCurve=new THREE.CatmullRomCurve3([
+    portW,
+    portW.clone().add(new THREE.Vector3(.30,-.16,.10)),
+    new THREE.Vector3((portW.x+plugW.x)/2+.05,Math.min(portW.y,plugW.y)-.62,(portW.z+plugW.z)/2+.28),
+    plugW.clone().add(new THREE.Vector3(-.05,-.34,.02)),
+    plugW
+  ]);
+  var seg=lowMode?48:96;
+  cableMesh=new THREE.Mesh(new THREE.TubeGeometry(cableCurve,seg,.036,lowMode?6:9,false),
+    mat({color:0x0C1024,roughness:.55,metalness:.25,envMapIntensity:.5}));
+  cableMesh.visible=false; scene.add(cableMesh);
+  if(plugMesh){ scene.remove(plugMesh); }
+  plugMesh=new THREE.Mesh(new THREE.BoxGeometry(.13,.16,.07),
+    mat({color:0x2C3560,roughness:.45,metalness:.55,envMapIntensity:.7}));
+  plugMesh.position.copy(plugW).add(new THREE.Vector3(0,-.05,0));
+  plugMesh.rotation.copy(phoneG.rotation); plugMesh.visible=false; scene.add(plugMesh);
+
+  /* pulses d'énergie */
+  var pg=new THREE.SphereGeometry(.058,12,10);
+  var pmt=new THREE.MeshBasicMaterial({color:C.mint,transparent:true,opacity:.95});
+  for(var i=0;i<(lowMode?3:6);i++){
+    var m=new THREE.Mesh(pg,pmt.clone()); m.visible=false; scene.add(m);
+    pulses.push({m:m,o:i/(lowMode?3:6)});
+  }
+  /* ondes sonores : anneaux autour de l'axe de l'enceinte */
+  s5G=new THREE.Group();
+  s5G.position.copy(ref.position); s5G.rotation.copy(ref.rotation); s5G.scale.copy(ref.scale);
+  scene.add(s5G);
+  var wg=new THREE.TorusGeometry(1,.014,6,56);
+  for(var j=0;j<3;j++){
+    var wm=new THREE.Mesh(wg,new THREE.MeshBasicMaterial({color:C.mint,transparent:true,opacity:0}));
+    wm.rotation.y=Math.PI/2; s5G.add(wm); waves.push({m:wm,o:j/3});
+  }
+  s5G.visible=false;
+}
+</script>
+<script>
+/* ------------------------------------------------------------------ */
+/* 5. Navigation, sections, chrome                                      */
+/* ------------------------------------------------------------------ */
+var secs=[].slice.call(document.querySelectorAll(".sec"));
+var N=secs.length, idx=0, printMode=false, mapOpen=false, notesOpen=false, secT=0;
+
+/* — titre lettre par lettre — */
+(function(){
+  var t=document.getElementById("title1"),s="NOMAD ONE",h="";
+  for(var i=0;i<s.length;i++){
+    h+= s[i]===" " ? '<span class="ch sp" style="--i:'+i+'">&nbsp;</span>'
+                   : '<span class="ch" style="--i:'+i+'">'+s[i]+'</span>';
+  }
+  t.innerHTML=h;
+})();
+
+/* — notes de l'orateur — */
+var NOTES=[
+ {t:"Titre",tm:"0:00 → 0:15",l:[
+   "Bonjour, nous vous présentons NOMAD ONE.",
+   "Une enceinte Bluetooth… qui recharge aussi votre téléphone.",
+   "Annoncer d'emblée l'innovation : c'est le fil rouge de l'oral."]},
+ {t:"Le public",tm:"0:15 → 0:45",l:[
+   "Cible : les utilisateurs nomades — voyageurs, étudiants, campeurs, van-lifers, télétravailleurs.",
+   "Lieux : train, avion, hôtel, camping, plage, montagne.",
+   "Usages : écouter de la musique, sonoriser un moment, appeler en mains libres.",
+   "Contraintes : peu de prises, place limitée, chocs, pluie, poussière, budget serré.",
+   "Ne pas lire les quatre blocs : en citer deux, résumer le reste."]},
+ {t:"Les 3 attentes",tm:"0:45 → 1:05",l:[
+   "De ces contraintes découlent trois attentes : autonomie, compacité, résistance.",
+   "Une phrase par carte, pas plus.",
+   "Enchaîner : « Voici comment NOMAD ONE y répond. »"]},
+ {t:"Caractéristiques",tm:"1:05 → 1:35",l:[
+   "24 h d'autonomie · 20 W · 450 g pour 15 cm · IP67 · Bluetooth 5.3 · mousqueton.",
+   "Insister sur IP67 (étanche + anti-poussière) et sur les 450 g.",
+   "Mentionner l'appairage stéréo de deux enceintes et le micro pour les appels.",
+   "Laisser l'animation se terminer avant de passer à la suite."]},
+ {t:"L'innovation",tm:"1:35 → 2:00",l:[
+   "LE moment fort — ralentir le débit ici.",
+   "Le port USB-C n'est pas seulement une entrée : c'est une SORTIE.",
+   "L'enceinte sert de batterie externe et recharge le téléphone MÊME pendant la lecture.",
+   "Conclure : « Un objet en moins dans le sac. »"]},
+ {t:"Le prix",tm:"2:00 → 2:15",l:[
+   "99 € — le prix d'une enceinte comparable, sans la batterie externe.",
+   "Deux objets deviennent un seul.",
+   "20 à 30 € économisés, un seul appareil à charger."]},
+ {t:"Conclusion",tm:"2:15 → 2:30",l:[
+   "Trois points forts : un objet en moins, prête pour tout, toujours à portée.",
+   "Phrase finale : « Même prix que la concurrence, valeur d'usage supérieure. »",
+   "Marquer une pause, remercier, ouvrir aux questions."]}
+];
+
+/* — plan (Échap) — */
+(function(){
+  var g=document.getElementById("mapG");
+  secs.forEach(function(s,i){
+    var d=document.createElement("div"); d.className="t";
+    d.innerHTML='<span class="n">0'+(i+1)+'</span><h3>'+s.getAttribute("data-t")+'</h3>';
+    d.onclick=function(){ go(i); toggleMap(false); };
+    g.appendChild(d);
+  });
+})();
+
+/* — étiquettes de la vue éclatée — */
+var labs=[].slice.call(document.querySelectorAll(".lb"));
+var labG=document.getElementById("labG"), labPaths=[];
+labs.forEach(function(l,i){
+  var p=document.createElementNS("http://www.w3.org/2000/svg","path");
+  p.style.setProperty("--L","900"); p.style.setProperty("--i",i);
+  labG.appendChild(p); labPaths.push(p);
+});
+function placeLabels(){
+  var w=window.innerWidth,h=window.innerHeight, narrow=w<1000;
+  var lx=narrow?4:Math.max(3.2,(w-1560)/2/w*100+3.2), rx=100-lx;
+  labs.forEach(function(l,i){
+    var left=l.classList.contains("left");
+    var row=i%3, ys=[20,42,64];
+    l.style.top=(ys[row]+(left?0:5))+"%";
+    if(left){ l.style.left=lx+"%"; l.style.right="auto"; }
+    else    { l.style.right=(100-rx)+"%"; l.style.left="auto"; }
+  });
+}
+function updateLabels(){
+  if(idx!==3||printMode) return;
+  var w=window.innerWidth,h=window.innerHeight;
+  labs.forEach(function(l,i){
+    var key=l.getAttribute("data-a"), o=P[key]; if(!o) return;
+    var v=new THREE.Vector3(); o.getWorldPosition(v); v.project(camera);
+    var ax=(v.x*.5+.5)*w, ay=(-v.y*.5+.5)*h;
+    var r=l.getBoundingClientRect();
+    var left=l.classList.contains("left");
+    var dx=left?r.right+10:r.left-10, dy=r.top+11;
+    var midx=left?dx+(ax-dx)*.42:dx+(ax-dx)*.42;
+    labPaths[i].setAttribute("d","M"+dx.toFixed(1)+" "+dy.toFixed(1)+
+      " L"+midx.toFixed(1)+" "+dy.toFixed(1)+" L"+ax.toFixed(1)+" "+ay.toFixed(1));
+  });
+}
+
+/* — compteur de prix — */
+var cntEl=document.getElementById("cnt"), cntRun=false;
+function runCounter(){
+  if(cntRun) return; cntRun=true;
+  var t0=performance.now(), dur=1400;
+  (function step(now){
+    var k=Math.min(1,(now-t0)/dur), e=1-Math.pow(1-k,3);
+    cntEl.textContent=Math.round(e*99);
+    if(k<1) requestAnimationFrame(step); else cntEl.textContent="99";
+  })(t0);
+}
+
+/* — minuteur — */
+var tStart=0, tEl=document.getElementById("timer"), tVal=document.getElementById("tval");
+function tick(){
+  if(!tStart) return;
+  var s=Math.floor((performance.now()-tStart)/1000);
+  tVal.textContent=Math.floor(s/60)+":"+("0"+(s%60)).slice(-2);
+  tEl.classList.toggle("warn",s>=135&&s<150);
+  tEl.classList.toggle("over",s>=150);
+}
+setInterval(tick,250);
+
+/* — changement de section — */
+function go(i,dir){
+  i=Math.max(0,Math.min(N-1,i));
+  if(i===idx&&secs[idx].classList.contains("on")) return;
+  if(!tStart&&i>0){ tStart=performance.now(); tEl.classList.add("run"); }
+  secs[idx].classList.remove("on"); idx=i; secT=0;
+  secs[idx].classList.add("on");
+  document.getElementById("progI").style.width=((idx+1)/N*100)+"%";
+  document.getElementById("pcur").textContent="0"+(idx+1);
+  [].slice.call(document.querySelectorAll("#mapG .t")).forEach(function(t,k){ t.classList.toggle("cur",k===idx); });
+  if(idx>0) document.getElementById("hint").classList.add("hide");
+  if(idx===5) runCounter();
+  if(idx===3) placeLabels();
+  if(notesOpen) fillNotes();
+  if(HAS3D&&ready){
+    var st=ST[idx];
+    tgt.p.set(stateX(st),st.y,st.z); tgt.r.set(st.rx,st.ry);
+    tgt.s=st.s*FIT; tgt.ex=st.ex; spinTgt=st.spin; mAmpTgt=st.amp;
+  }
+  if(idx!==4){ s5t=0; batP=.08; drawScreen(batP); }
+  else if(HAS3D&&ready&&phoneG){ phoneG.scale.setScalar(.80); }
+}
+function next(){ go(idx+1); } function prev(){ go(idx-1); }
+
+/* — overlays — */
+function toggleMap(v){
+  mapOpen=(v===undefined)?!mapOpen:v;
+  document.getElementById("map").classList.toggle("on",mapOpen);
+  if(mapOpen&&notesOpen) toggleNotes(false);
+}
+function fillNotes(){
+  var n=NOTES[idx];
+  document.getElementById("nTitle").textContent=n.t;
+  document.getElementById("nNum").textContent="0"+(idx+1)+" / 0"+N;
+  document.getElementById("nTime").textContent="Repère : "+n.tm;
+  document.getElementById("nList").innerHTML=n.l.map(function(x){return "<li>"+x+"</li>";}).join("");
+}
+function toggleNotes(v){
+  notesOpen=(v===undefined)?!notesOpen:v;
+  if(notesOpen) fillNotes();
+  document.getElementById("notes").classList.toggle("on",notesOpen);
+  if(notesOpen&&mapOpen) toggleMap(false);
+}
+function togglePrint(){
+  printMode=!printMode;
+  document.body.classList.toggle("print",printMode);
+  document.documentElement.classList.toggle("print",printMode);
+  if(printMode){ toggleMap(false); toggleNotes(false); secs.forEach(function(s){s.classList.add("on");}); cntEl.textContent="99"; }
+  else{ secs.forEach(function(s,i){ s.classList.toggle("on",i===idx); }); window.scrollTo(0,0); }
+}
+
+/* — clavier — */
+document.addEventListener("keydown",function(e){
+  var k=e.key;
+  if(k==="Escape"){ if(notesOpen){toggleNotes(false);} else if(printMode){togglePrint();} else toggleMap(); e.preventDefault(); return; }
+  if(k==="n"||k==="N"){ toggleNotes(); e.preventDefault(); return; }
+  if(k==="p"||k==="P"){ togglePrint(); e.preventDefault(); return; }
+  if(k==="t"||k==="T"){ tStart=performance.now(); tEl.classList.add("run"); tick(); return; }
+  if(printMode) return;
+  if(k==="ArrowRight"||k==="ArrowDown"||k===" "||k==="PageDown"||k==="Enter"){ next(); e.preventDefault(); }
+  else if(k==="ArrowLeft"||k==="ArrowUp"||k==="PageUp"||k==="Backspace"){ prev(); e.preventDefault(); }
+  else if(k==="Home"){ go(0); } else if(k==="End"){ go(N-1); }
+  else if(k>="1"&&k<="7"){ go(parseInt(k,10)-1); }
+});
+document.addEventListener("click",function(e){
+  if(printMode||mapOpen||notesOpen) return;
+  if(e.target.closest&&e.target.closest("#map,#notes")) return;
+  next();
+});
+window.addEventListener("pointermove",function(e){
+  mxT=(e.clientX/window.innerWidth)*2-1;
+  myT=(e.clientY/window.innerHeight)*2-1;
+});
+</script>
+<script>
+/* ------------------------------------------------------------------ */
+/* 6. Boucle de rendu, mode dégradé, démarrage                          */
+/* ------------------------------------------------------------------ */
+var last=0, fpsAcc=0, fpsN=0, fpsWin=0, lowStrikes=0, snapY=0, clock0=0;
+function damp(a,b,l,dt){ return a+(b-a)*(1-Math.exp(-l*dt)); }
+
+function degrade(){
+  if(lowMode) return; lowMode=true;
+  document.body.classList.add("lo");
+  renderer.setPixelRatio(1);
+  scene.traverse(function(o){
+    if(o.isMesh&&o.material&&o.material.envMap!==undefined){ o.material.envMap=null; o.material.needsUpdate=true; }
+    if(o.isMesh&&o.material&&o.material.bumpMap){ o.material.bumpMap=null; o.material.needsUpdate=true; }
+  });
+  for(var i=3;i<pulses.length;i++) pulses[i].m.visible=false;
+  pulses.length=Math.min(pulses.length,3);
+  console.log("NOMAD ONE : mode dégradé activé (fps bas).");
+}
+
+function frame(now){
+  requestAnimationFrame(frame);
+  if(!ready) return;
+  var dt=last?Math.max(.001,Math.min(.05,(now-last)/1000)):.016;   /* jamais négatif ni énorme */ last=now; secT+=dt;
+
+  /* surveillance des fps → mode dégradé */
+  fpsAcc+=dt; fpsN++;
+  if(fpsAcc>=1.2){
+    var fps=fpsN/fpsAcc; fpsAcc=0; fpsN=0;
+    if(fps<30){ if(++lowStrikes>=2) degrade(); } else lowStrikes=0;
+  }
+  if(printMode||document.hidden) return;
+
+  /* interpolations */
+  cur.p.x=damp(cur.p.x,tgt.p.x,4.2,dt); cur.p.y=damp(cur.p.y,tgt.p.y,4.2,dt); cur.p.z=damp(cur.p.z,tgt.p.z,4.2,dt);
+  cur.r.x=damp(cur.r.x,tgt.r.x,4.0,dt); cur.r.y=damp(cur.r.y,tgt.r.y,4.0,dt);
+  cur.s=damp(cur.s,tgt.s,4.2,dt);
+  cur.ex=damp(cur.ex,tgt.ex,3.4,dt);
+  spinNow=damp(spinNow,spinTgt,3.0,dt);
+  mouseAmp=damp(mouseAmp,mAmpTgt,3.0,dt);
+  mx=damp(mx,mxT,5.0,dt); my=damp(my,myT,5.0,dt);
+
+  if(spinTgt<.005) spinAcc=damp(spinAcc,snapY,3.2,dt);
+  else spinAcc+=spinNow*dt;
+
+  rig.position.copy(cur.p);
+  rig.scale.setScalar(cur.s);
+  shadowM.position.set(cur.p.x,cur.p.y-.66*cur.s,cur.p.z-.05);
+  shadowM.scale.set(cur.s*.74,cur.s*.34,1);
+  rig.rotation.x=cur.r.x+my*.26*mouseAmp;
+  rig.rotation.y=cur.r.y+spinAcc+mx*.62*mouseAmp;
+  rig.rotation.z=Math.sin(now*.00035)*.012;
+
+  /* vue éclatée */
+  var e=cur.ex;
+  ["gril","rings","capL","capR","driv","bat","btn","port","strap","carab"].forEach(function(k){
+    var o=P[k]; if(!o||!o.userData.base) return;
+    o.position.set(o.userData.base.x+o.userData.ex.x*e,
+                   o.userData.base.y+o.userData.ex.y*e,
+                   o.userData.base.z+o.userData.ex.z*e);
+  });
+  shadowM.material.opacity=.55*(1-e*.5);
+
+  /* section 5 : câble, énergie, ondes */
+  var on5=(idx===4), refPh=(ST[idx].ph===1);
+  phoneG.visible=(on5||refPh)&&!printMode;
+  if(cableMesh) cableMesh.visible=on5;
+  if(plugMesh) plugMesh.visible=on5&&secT>1.25;
+  if(s5G) s5G.visible=on5;
+  if(on5){
+    var t=secT;
+    phoneG.position.copy(s5PhonePos); phoneG.rotation.copy(s5PhoneRot);
+    phBodyM.opacity=damp(phBodyM.opacity,1,6,dt); phScrM.opacity=damp(phScrM.opacity,1,6,dt);
+    phoneG.scale.setScalar(damp(phoneG.scale.x,1,5.0,dt));
+    var prog=Math.max(0,Math.min(1,(t-.55)/.85));
+    var g=cableMesh.geometry, tot=g.index?g.index.count:g.attributes.position.count;
+    g.setDrawRange(0,Math.max(6,Math.floor(tot*prog/6)*6));
+    var connected=prog>=1;
+    for(var i=0;i<pulses.length;i++){
+      var pu=pulses[i]; pu.m.visible=connected;
+      if(!connected) continue;
+      var u=((now*.00042)+pu.o)%1;
+      cableCurve.getPointAt(u,pu.m.position);
+      var f=Math.sin(Math.PI*u);
+      pu.m.scale.setScalar(.55+f*.75);
+      pu.m.material.opacity=.25+f*.75;
+    }
+    var target=connected? .08+.84*Math.min(1,(t-1.35)/5.2) : .08;
+    if(Math.abs(target-batP)>.008){ batP=target; drawScreen(batP); }
+    for(var j=0;j<waves.length;j++){
+      var wv=waves[j], u2=((now*.00030)+wv.o)%1;
+      wv.m.scale.setScalar(.62+u2*1.15);
+      wv.m.position.x=-.75-u2*1.35;
+      wv.m.material.opacity=.42*(1-u2)*Math.min(1,u2*5)*Math.min(1,t/1.1);
+    }
+  } else {
+    for(var q=0;q<pulses.length;q++) pulses[q].m.visible=false;
+    /* téléphone en arrière-plan : donne l'échelle réelle de l'enceinte.
+       Opacité réduite = effet de profondeur de champ (il reste en retrait). */
+    if(phoneG.scale.x>.79) phoneG.scale.setScalar(.80);
+    if(refPh){
+      phoneG.scale.setScalar(damp(phoneG.scale.x,1,5,dt));
+      phoneG.position.set(cur.p.x+2.80*cur.s, cur.p.y-1.00*cur.s, cur.p.z-2.45);
+      phoneG.rotation.set(.05,-.62,.03);
+      phBodyM.opacity=damp(phBodyM.opacity,.34,5,dt);
+      phScrM.opacity=damp(phScrM.opacity,.10,5,dt);
+    }
+  }
+
+  updateLabels();
+  renderer.render(scene,camera);
+}
+
+/* ------------------------------------------------------------------ */
+var rzT=null;
+window.addEventListener("resize",function(){
+  if(!HAS3D||!renderer) return;
+  clearTimeout(rzT);
+  rzT=setTimeout(function(){
+    layout(); buildS5(); placeLabels();
+    var st=ST[idx]; tgt.p.set(stateX(st),st.y,st.z); tgt.s=st.s*FIT;
+  },120);
+});
+
+function boot(){
+  if(HAS3D){
+    try{
+      initGL();
+      phoneG.scale.setScalar(.80);
+      var st=ST[0];
+      cur.p.set(stateX(st),st.y-1.4,st.z-2.2); cur.r.set(st.rx,st.ry-1.1);
+      cur.s=st.s*FIT*.72; cur.ex=0;
+      tgt.p.set(stateX(st),st.y,st.z); tgt.r.set(st.rx,st.ry);
+      tgt.s=st.s*FIT; spinTgt=st.spin; spinNow=st.spin;
+      requestAnimationFrame(frame);
+    }catch(err){
+      console.error("NOMAD ONE / 3D :",(err&&err.stack)?err.stack:err); HAS3D=false; cvs.style.display="none";
+    }
+  } else {
+    cvs.style.display="none";
+    document.getElementById("hint").innerHTML="Mode 2D (Three.js indisponible) · <kbd>P</kbd> impression";
+  }
+  placeLabels();
+  setTimeout(function(){ secs[0].classList.add("on"); },90);
+  document.getElementById("progI").style.width=(100/N)+"%";
+}
+/* snap de rotation quand l'enceinte doit s'immobiliser (section 5) */
+(function(){
+  var _go=go;
+  go=function(i,d){
+    _go(i,d);
+    if(idx===4) snapY=Math.round(spinAcc/(Math.PI*2))*Math.PI*2;
+  };
+})();
+if(document.readyState==="loading") document.addEventListener("DOMContentLoaded",boot); else boot();
+</script>
+</body>
+</html>

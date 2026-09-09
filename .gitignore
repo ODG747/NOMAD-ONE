@@ -1,0 +1,7 @@
+# système
+.DS_Store
+Thumbs.db
+*~
+
+# fichiers temporaires de bureautique
+~$*
