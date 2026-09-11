@@ -4,9 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>NOMAD ONE — L'enceinte qui recharge aussi votre téléphone</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Inter:wght@300;400;500;600&display=swap">
+<link rel="stylesheet" href="vendor/fonts.css">
 <style>
 :root{
   --bg:#12162E; --bg2:#0B0E20; --deep:#065A82; --mint:#02C39A;
@@ -229,11 +227,52 @@ body.lo #s6 .price{background:none;-webkit-text-fill-color:var(--ink);color:var(
   #s5 .side{position:static;transform:none;max-width:none;margin-top:auto}
   .card{min-height:0}
 }
+/* ---------- enceinte photographique (slides 1, 2, 6, 7) ---------- */
+#scene{opacity:0;transition:opacity .45s var(--e)}
+#heroW{position:fixed;z-index:1;pointer-events:none;left:var(--hx,50vw);top:var(--hy,27vh);
+  width:var(--hw,48vw);aspect-ratio:4/3;transform:translate(-50%,-52%);opacity:var(--ho,0);
+  transition:left .75s var(--e),top .75s var(--e),width .75s var(--e),opacity .45s var(--e)}
+#hero{width:100%;height:100%;display:block}
+
+/* ---------- grain de capteur + vignettage (communs a toutes les slides) ---------- */
+#film{position:fixed;inset:0;z-index:5;pointer-events:none;
+  background:radial-gradient(ellipse 78% 72% at 50% 46%,transparent 52%,rgba(4,6,15,.58) 100%)}
+#film::after{content:"";position:absolute;inset:0;opacity:.085;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='g'><feTurbulence type='fractalNoise' baseFrequency='.92' numOctaves='2' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='100%25' height='100%25' filter='url(%23g)'/></svg>")}
+
+/* ---------- prechargement ---------- */
+#load{position:fixed;inset:0;z-index:30;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;gap:16px;background:var(--bg);transition:opacity .5s var(--e),visibility 0s linear .5s}
+#load.done{opacity:0;visibility:hidden}
+#load .bar{width:170px;height:2px;background:rgba(255,255,255,.08);overflow:hidden}
+#load .bar i{display:block;height:100%;width:0;background:var(--mint);transition:width .18s linear}
+
+/* ---------- mention du projet, en bas de la slide de titre ---------- */
+#s1 .s1foot{position:absolute;left:0;right:0;bottom:clamp(40px,7vh,72px);text-align:center}
+/* fonds d'ambiance (slides 2 et 7) : assombris pour que le texte reste lisible */
+#amb{position:fixed;inset:0;z-index:0;pointer-events:none}
+#amb .a{position:absolute;inset:0;background-size:cover;background-position:center;
+  opacity:0;transform:scale(1.04);transition:opacity .8s var(--e),transform 6s linear;
+  filter:blur(14px) saturate(.85) brightness(.6)}
+#amb .a.on{opacity:.62;transform:scale(1.06)}
+#amb::after{content:"";position:absolute;inset:0;
+  background:linear-gradient(90deg,rgba(11,14,32,.92) 0%,rgba(11,14,32,.62) 46%,rgba(11,14,32,.38) 100%),
+             linear-gradient(0deg,rgba(11,14,32,.85) 0%,transparent 45%)}
+/* rendus fixes des slides 4 et 5 quand la 3D temps reel est indisponible */
+#fb{position:fixed;z-index:1;pointer-events:none;width:min(58vw,100vh);right:4vw;top:50%;
+  transform:translateY(-50%)}
+body.lo #film::after{display:none}
+body.print #heroW,body.print #film,body.print #load,body.print #amb,body.print #fb{display:none!important}
+body.print #s1 .s1foot{position:static;margin-top:18px;text-align:left}
+
 @media (prefers-reduced-motion:reduce){.r,.ch{transition-duration:.01ms!important}}
 </style>
 </head>
 <body>
 <canvas id="scene"></canvas>
+<div id="amb" aria-hidden="true"><div class="a" id="ambA"></div><div class="a" id="ambB"></div></div>
+<div id="heroW"><canvas id="hero" width="1600" height="1200" aria-label="L'enceinte NOMAD ONE"></canvas></div>
+<img id="fb" alt="" hidden>
 <div id="deck">
 
 <!-- ========== 1. TITRE ========== -->
@@ -244,9 +283,9 @@ body.lo #s6 .price{background:none;-webkit-text-fill-color:var(--ink);color:var(
       <h1 id="title1" aria-label="NOMAD ONE"></h1>
       <div class="rule"></div>
       <p class="lead r" style="--d:1150ms">L'enceinte Bluetooth qui recharge aussi votre téléphone.</p>
-      <p class="eyebrow r" style="--d:1400ms;margin-top:30px">Projet d'innovation · 1<sup>re</sup> STI2D</p>
     </div>
   </div>
+  <p class="eyebrow r s1foot" style="--d:1400ms">Projet d'innovation · 1<sup>re</sup> STI2D</p>
 </section>
 
 <!-- ========== 2. LE PUBLIC ========== -->
@@ -398,6 +437,15 @@ body.lo #s6 .price{background:none;-webkit-text-fill-color:var(--ink);color:var(
 </div>
 
 <!-- ========== chrome ========== -->
+<div id="film"></div>
+<div id="load"><span class="eyebrow">NOMAD ONE</span><div class="bar"><i id="loadI"></i></div></div>
+<script>
+/* garde-fou : meme si un script plante, la presentation s'affiche au bout de 9 s */
+setTimeout(function(){
+  var l=document.getElementById("load"); if(l) l.className="done";
+  if(!document.querySelector(".sec.on")){ var s=document.getElementById("s1"); if(s) s.classList.add("on"); }
+},9000);
+</script>
 <div id="prog"><i id="progI"></i></div>
 <div id="pnum"><b id="pcur">01</b> / 07</div>
 <div id="timer"><i></i><span id="tval">0:00</span></div>
@@ -437,7 +485,7 @@ body.lo #s6 .price{background:none;-webkit-text-fill-color:var(--ink);color:var(
 body.lo .sec.on .card .drop,body.lo .sec.on .card .rip,body.lo .sec.on .card .rip2{animation-iteration-count:1}
 </style>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="vendor/three.min.js"></script>
 <script>
 "use strict";
 /* =====================================================================
@@ -954,9 +1002,9 @@ function updateLabels(){
   if(idx!==3||printMode) return;
   var w=window.innerWidth,h=window.innerHeight;
   labs.forEach(function(l,i){
-    var key=l.getAttribute("data-a"), o=P[key]; if(!o) return;
-    var v=new THREE.Vector3(); o.getWorldPosition(v); v.project(camera);
-    var ax=(v.x*.5+.5)*w, ay=(-v.y*.5+.5)*h;
+    var a=ANCH[l.getAttribute("data-a")]; if(!a) return;
+    var R=heroW.getBoundingClientRect();
+    var ax=R.left+a[0]*R.width, ay=R.top+a[1]*R.height;
     var r=l.getBoundingClientRect();
     var left=l.classList.contains("left");
     var dx=left?r.right+10:r.left-10, dy=r.top+11;
@@ -1095,6 +1143,8 @@ function frame(now){
     if(fps<30){ if(++lowStrikes>=2) degrade(); } else lowStrikes=0;
   }
   if(printMode||document.hidden) return;
+  /* hors des slides 4 et 5 la 3D est masquee : inutile de la calculer */
+  if(!(idx===3||idx===4)&&secT>.6) return;
 
   /* interpolations */
   cur.p.x=damp(cur.p.x,tgt.p.x,4.2,dt); cur.p.y=damp(cur.p.y,tgt.p.y,4.2,dt); cur.p.z=damp(cur.p.z,tgt.p.z,4.2,dt);
@@ -1188,6 +1238,9 @@ window.addEventListener("resize",function(){
 });
 
 function boot(){
+  /* toutes les vues viennent des rendus Blender : la 3D temps reel n'est
+     plus demarree (meme rendu partout, beaucoup moins de calcul) */
+  HAS3D=false;
   if(HAS3D){
     try{
       initGL();
@@ -1203,11 +1256,14 @@ function boot(){
     }
   } else {
     cvs.style.display="none";
-    document.getElementById("hint").innerHTML="Mode 2D (Three.js indisponible) · <kbd>P</kbd> impression";
   }
   placeLabels();
-  setTimeout(function(){ secs[0].classList.add("on"); },90);
   document.getElementById("progI").style.width=(100/N)+"%";
+  heroLoad(function(){
+    document.getElementById("load").className="done";
+    heroPlace(); liveSet();
+    setTimeout(function(){ secs[0].classList.add("on"); },280);
+  });
 }
 /* snap de rotation quand l'enceinte doit s'immobiliser (section 5) */
 (function(){
@@ -1217,6 +1273,134 @@ function boot(){
     if(idx===4) snapY=Math.round(spinAcc/(Math.PI*2))*Math.PI*2;
   };
 })();
+/* ------------------------------------------------------------------ */
+/* 7. Enceinte photographique : sequence pre-rendue (Blender / Cycles)  */
+/*    72 vues sur 360 deg : rotation lente, la souris l'avance ou la    */
+/*    recule                                                            */
+/* ------------------------------------------------------------------ */
+var HERO={n:72, path:"assets/turn/t",
+  /* centre de l'image (vw, vh) et largeur (vw), par slide ; null = pas d'image (3) */
+  place:[{x:50,y:26,w:48},{x:73,y:52,w:52},null,{x:50,y:55,w:58},{x:65,y:52,w:56},
+         {x:74,y:25,w:36},{x:50,y:22,w:40}]};
+/* fonds d'ambiance : index de slide -> rendu */
+var AMB={1:"backpack", 6:"rock"};
+/* position des pieces dans la derniere image de l'eclatee (0..1), calculee
+   dans Blender par blender/label_anchors.py */
+var ANCH={bat:[.4894,.7182],driv:[.2875,.4337],body:[.4894,.5207],
+          gril:[.4893,.355],btn:[.4892,.1524],carab:[.7982,.1113]};
+var XN=40;
+var heroW=document.getElementById("heroW"), heroC=document.getElementById("hero"),
+    heroX=heroC.getContext("2d"), frames=[], xframes=[], s5img=null, heroReady=false,
+    heroLast=0, heroDrawn=-1, heroSpin=0, heroPos=0, webpOK=true, ambUrl={}, ambFlip=false,
+    explT=0, fpsA=0, fpsN=0, fpsLow=0;
+
+function heroDraw(im,key){
+  /* le canevas prend la taille reellement affichee : reduire l'image par
+     filtrage de qualite ici evite le moire sur la grille perforee */
+  var w=Math.min(1600,Math.round((heroW.clientWidth||800)*Math.min(2,window.devicePixelRatio||1)));
+  if(Math.abs(w-heroC.width)>w*.06){ heroC.width=w; heroC.height=Math.round(w*.75); heroDrawn=-1; }
+  if(!im||key===heroDrawn) return;
+  heroX.imageSmoothingEnabled=true; heroX.imageSmoothingQuality="high";
+  heroX.clearRect(0,0,heroC.width,heroC.height);
+  heroX.drawImage(im,0,0,heroC.width,heroC.height); heroDrawn=key;
+}
+function heroPlace(){
+  var p=HERO.place[idx];
+  if(!p||!heroReady){ heroW.style.setProperty("--ho","0"); }
+  else{
+    var narrow=window.innerWidth<1000;
+    heroW.style.setProperty("--hx",(narrow?50:p.x)+"vw");
+    heroW.style.setProperty("--hy",p.y+"vh");
+    heroW.style.setProperty("--hw",(narrow?Math.min(92,p.w*1.5):p.w)+"vw");
+    heroW.style.setProperty("--ho","1");
+  }
+  ambSet();
+}
+/* fondu enchaine entre deux calques, pour passer d'un fond a l'autre sans trou */
+function ambSet(){
+  var key=AMB[idx], A=document.getElementById("ambA"), B=document.getElementById("ambB");
+  var cur=ambFlip?B:A, nxt=ambFlip?A:B;
+  if(!key||!ambUrl[key]){ A.classList.remove("on"); B.classList.remove("on"); return; }
+  if(cur.classList.contains("on")&&cur.getAttribute("data-k")===key) return;
+  nxt.style.backgroundImage="url("+ambUrl[key]+")"; nxt.setAttribute("data-k",key);
+  nxt.classList.add("on"); cur.classList.remove("on"); ambFlip=!ambFlip;
+}
+function liveSet(){ cvs.style.opacity="0"; document.getElementById("fb").hidden=true; }
+
+function heroLoad(done){
+  var keys=Object.keys(AMB).map(function(k){ return AMB[k]; });
+  var n=HERO.n, total=n+XN+1+keys.length, got=0, finished=false, bar=document.getElementById("loadI");
+  function end(){ if(finished) return; finished=true; done(); }
+  function tick(){ got++; bar.style.width=Math.min(100,got/total*100)+"%"; if(got>=total) end(); }
+  function pad(i){ return (i<10?"0":"")+i; }
+  function img(url,ok){ var im=new Image(); im.onload=function(){ ok(im); tick(); }; im.onerror=tick; im.src=url; }
+  function rest(){                           /* eclatee, plan de charge, fonds */
+    var ext=webpOK?".webp":".jpg";
+    for(var j=0;j<XN;j++) (function(j){
+      if(webpOK) img("assets/expl/e"+pad(j)+".webp",function(im){ xframes[j]=im; }); else tick();
+    })(j);
+    img("assets/slide5"+ext,function(im){ s5img=im; });
+    keys.forEach(function(k){ var url="assets/amb/"+k+ext; img(url,function(){ ambUrl[k]=url; }); });
+  }
+  function fallback(){                       /* navigateur sans WebP : images fixes en JPEG */
+    webpOK=false;
+    var im=new Image();
+    im.onload=function(){ for(var i=0;i<n;i++) frames[i]=im; heroReady=true; got+=n; rest(); };
+    im.onerror=function(){ heroW.style.display="none"; got+=n; rest(); };
+    im.src=HERO.path+"00.jpg";
+  }
+  var first=new Image();                     /* la premiere image d'abord, le reste ensuite */
+  first.onload=function(){
+    if(!first.naturalWidth){ fallback(); return; }
+    frames[0]=first; heroReady=true; tick();
+    for(var i=1;i<n;i++) (function(i){ img(HERO.path+pad(i)+".webp",function(im){ frames[i]=im; }); })(i);
+    rest();
+  };
+  first.onerror=fallback;
+  first.src=HERO.path+"00.webp";
+  setTimeout(end,12000);                     /* jamais bloque par un fichier manquant */
+}
+
+function heroTick(now){
+  requestAnimationFrame(heroTick);
+  if(!heroReady||printMode||document.hidden||!HERO.place[idx]){ heroLast=0; return; }
+  var dt=heroLast?Math.min(.05,(now-heroLast)/1000):.016; heroLast=now;
+
+  /* fps reels : deux mesures de suite sous 30 -> mode degrade */
+  fpsA+=dt; fpsN++;
+  if(fpsA>=1.2){
+    var fps=fpsN/fpsA; fpsA=0; fpsN=0;
+    if(fps<30){ if(++fpsLow>=2&&!lowMode){ lowMode=true; document.body.classList.add("lo");
+      console.log("NOMAD ONE : mode degrade active (fps bas)."); } }
+    else fpsLow=0;
+  }
+
+  if(idx===3){                               /* vue eclatee : les pieces s'ecartent */
+    explT=Math.min(1,explT+dt/1.3);
+    var e=explT<.5?2*explT*explT:1-Math.pow(-2*explT+2,2)/2;
+    var j=Math.round(e*(XN-1)); if(lowMode) j-=j%2; if(explT>=1) j=XN-1;
+    heroDraw(xframes[j]||frames[0],"x"+j);
+    updateLabels();
+    return;
+  }
+  if(idx===4){ heroDraw(s5img||frames[0],"s5"); return; }   /* recharge */
+
+  var m=(typeof mxT==="number"&&isFinite(mxT))?mxT:0;
+  heroSpin+=dt*2.4;                          /* ~12 deg/s : un tour en 30 s */
+  var t=heroSpin+m*14;                       /* la souris ajoute jusqu'a +-70 deg */
+  heroPos+=(t-heroPos)*(1-Math.exp(-3.2*dt));
+  var n=HERO.n, i=((Math.round(heroPos)%n)+n)%n;
+  if(lowMode) i-=i%2;                        /* mode degrade : une image sur deux */
+  heroDraw(frames[i]||frames[0],"t"+i);
+}
+requestAnimationFrame(heroTick);
+window.addEventListener("resize",function(){ heroPlace(); });
+(function(){ var _g=go; go=function(i,d){
+  var was=idx; _g(i,d);
+  if(idx===3&&was!==3) explT=0;              /* l'eclatement rejoue a chaque arrivee */
+  heroPlace(); liveSet();
+}; })();
+
 if(document.readyState==="loading") document.addEventListener("DOMContentLoaded",boot); else boot();
 </script>
 </body>

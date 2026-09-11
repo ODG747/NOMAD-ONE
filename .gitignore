@@ -5,3 +5,15 @@ Thumbs.db
 
 # fichiers temporaires de bureautique
 ~$*
+
+# rendus bruts et fichiers de travail Blender (tout se regenere depuis blender/*.py)
+blender/renders/
+blender/_*.png
+blender/*.blend
+blender/*.blend1
+
+# artefacts Python et fichiers de mesure temporaires
+__pycache__/
+*.pyc
+blender/_sz/
+blender/_*

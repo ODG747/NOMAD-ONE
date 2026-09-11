@@ -1,0 +1,28 @@
+{
+ "turn": {
+  "n": 72,
+  "path": "assets/turn/t%02d.webp"
+ },
+ "expl": {
+  "n": 40,
+  "path": "assets/expl/e%02d.webp"
+ },
+ "amb": {
+  "backpack": [
+   "assets/amb/backpack.webp",
+   "assets/amb/backpack.jpg"
+  ],
+  "rock": [
+   "assets/amb/rock.webp",
+   "assets/amb/rock.jpg"
+  ],
+  "tent": [
+   "assets/amb/tent.webp",
+   "assets/amb/tent.jpg"
+  ]
+ },
+ "slide5": [
+  "assets/slide5.webp",
+  "assets/slide5.jpg"
+ ]
+}
